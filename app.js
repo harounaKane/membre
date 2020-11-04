@@ -1,15 +1,11 @@
-const http = require("http");
+const express = require("express");
+const app = express();
 
-http
-.createServer( (req, res) => {
-     res.writeHead(200, {"content-type": "text/html"})
-    if(req.url === '/'){
-          res.write("Bonjour");
-    }else if(req.url === '/bonsoir'){
-          res.write("Bonsoir");
-    }else{
-         res.write("error 4040")
-    }
-     res.end();
+app.get('/', (req, res) => {
+     res.send("Bonjour accueil");
 })
-.listen(8000, () => console.log("started at port 8080"));
+
+app.get('/bonsoir', (req, res) => {
+     res.send("Bonsoir")
+})
+app.listen(8000, () => console.log("started at port 8080"))
