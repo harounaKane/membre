@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Document</title>
+</head>
+
+<body>
+     <header style="background-color: bisque; padding: 5px;">
+          <a href="">Ajouter un membre</a>
+     </header>
+     <main>
+          <h1>Liste de membres</h1>
+
+          <table>
+               <tr>
+                    <th>ID </th>
+                    <th>Prénom </th>
+                    <th>Age</th>
+                    <th>Action</th>
+               </tr>
+
+               <% for(let i=0; i<listeMembre.length; i++){%>
+               <tr>
+                    <td><%= listeMembre[i].id %></td>
+                    <td>
+                         <a href="/membre/<%= listeMembre[i].id %>">
+                              <%= listeMembre[i].prenom %>
+                         </a>
+                    </td>
+                    <td><%= listeMembre[i].age %></td>
+                    <td><a href="/delete/<%= listeMembre[i].id %>">suppression</a></td>
+               </tr>
+               <%}%>
+          </table>
+          <hr>
+          <form action="/add" method="POST">
+               <label for="">Prénom</label>
+               <input type="text" name="prenom">
+               <label for="">Age</label>
+               <input type="number" name="age">
+               <input type="submit">
+          </form>
+     </main>
+</body>
+
+</html>
