@@ -1,0 +1,13 @@
+<%- include('header') -%>
+
+<main>
+     <h2>Mise à jour membre</h2>
+     <form action="/update/membre" method="POST">
+          <input type="hidden" value="<%= id %>" name="id">
+          <label for="">Prénom</label>
+          <input type="text" name="prenom" required value="<%= prenom %>">
+          <label for="">Age</label>
+          <input type="number" name="age" required value="<%= age %>">
+          <input type="submit">
+     </form>
+</main>

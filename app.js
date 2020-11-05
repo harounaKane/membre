@@ -1,36 +1,39 @@
 const express = require("express");
+const fs = require('fs');
 var bodyParser = require('body-parser')
 const app = express();
 
+const data = require('./data/membre.json');
+
 app.use(bodyParser.urlencoded({ extended: true }))
 
-const data = 
-[
-     {id: 1, prenom: "Jean", age: 30},
-     {id: 2, prenom: "Pierre", age: 50},
-     {id: 3, prenom: "Toto", age: 18}
-]
 
 //middleware  
 app.use( (req, res, next) => {
      console.log("URL : " + req.url);
      next();
 } )
-
+//lecture
 app.get('/', (req, res) => {
      res.render('index.ejs', {listeMembre: data});
 })
 
+//lire les info d'un membre
 app.get('/membre/:id', (req, res) => {
      res.send("Bonsoir " + data[ (req.params.id - 1) ].prenom +" ")
 })
+
+//suppression 
 app.get('/delete/:id', (req, res) => {
      let index = getIndex( req.params.id );
      if(!isNaN(index)){
           data.splice(index, 1);
+          saveData(data);
      }
      res.redirect('/');
 })
+
+//ajouter un membre
 app.post('/add', (req, res) => {
      if(req.body.prenom != ""){
           let membre = {
@@ -39,7 +42,21 @@ app.post('/add', (req, res) => {
                age:  req.body.age
           }
           data.push(membre);
+          saveData(data);
      }
+     res.redirect('/');
+})
+//choix membre à modifier
+.get('/update/:id/:prenom/:age', (req, res) => {
+     res.render('update.ejs', {id: req.params.id, prenom: req.params.prenom, age: req.params.age});
+})
+
+//mise à jour membre
+.post('/update/membre', (req, res) => {
+     let index = getIndex(req.body.id);
+     data[index].prenom = req.body.prenom;
+     data[index].age = req.body.age;
+     saveData(data);
      res.redirect('/');
 })
 
@@ -56,5 +73,11 @@ function getIndex(id){
 }
 
 function createID(){
-     return data[data.length - 1].id + 1;
+     if(data.length) return data[data.length - 1].id + 1;
+     return 1;
+}
+
+function saveData(data){
+     newMembre = JSON.stringify(data);
+     fs.writeFileSync("data/membre.json", newMembre);
 }
