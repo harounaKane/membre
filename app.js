@@ -3,6 +3,8 @@ const fs = require('fs');
 var bodyParser = require('body-parser')
 const app = express();
 
+const mongoClient = require('mongodb');
+
 const data = require('./data/membre.json');
 
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -16,6 +18,14 @@ app.use( (req, res, next) => {
 //lecture
 app.get('/', (req, res) => {
      res.render('index.ejs', {listeMembre: data});
+})
+
+mongoClient.connect("mongodb://localhost/", (err, db) => {
+     dbo = db.db("membre");
+     dbo.createCollection("listeMembre", (err, res) => {
+          console.log("collection créée");
+     })
+     dbo.collection('listeMembre').insert(data);
 })
 
 //lire les info d'un membre
